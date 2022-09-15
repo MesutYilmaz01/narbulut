@@ -1,0 +1,7 @@
+FROM nginx:1.23.1-alpine as prod-stage
+COPY /docker/nginx/conf.d/narbulut.conf /etc/nginx/conf.d/narbulut.conf
+CMD ["nginx", "-g", "daemon off;"]
+
+#to install vim to nginx server
+RUN ["apk", "update"]
+RUN ["apk", "add", "vim"]

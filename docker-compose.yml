@@ -1,0 +1,57 @@
+version: '3.9'
+services:
+  app:
+    build: 
+      context: ./
+      dockerfile: ./dockerfile/php/Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: app
+    volumes:
+      - ./:/var/www
+    networks:
+      net:
+        ipv4_address: 192.10.2.4
+  web:
+    build: 
+      context: ./
+      dockerfile: ./dockerfile/nginx/Dockerfile
+    ports:
+      - "80:80"
+    container_name: web
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    networks:
+      net:
+        ipv4_address: 192.10.2.5
+    volumes_from:
+      - app
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment: 
+        MYSQL_DATABASE: testdb
+        MYSQL_ROOT_PASSWORD: mypassword
+        MYSQL_USER: user
+        MYSQL_PASSWORD: mypassword
+    networks:
+      net:
+        ipv4_address: 192.10.2.6
+  cache:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - ./redis:/var/www/redis
+    networks:
+      net:
+        ipv4_address: 192.10.2.7
+networks:
+  net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.10.2.0/24
