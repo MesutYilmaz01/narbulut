@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Contracts\IOrganizationService;
 use App\Http\Repository\OrganizationRepository;
+use App\Models\Organization;
 
 class OrganizationService implements IOrganizationService
 {
@@ -35,5 +36,14 @@ class OrganizationService implements IOrganizationService
     public function getByCondition (array $condition)
     {
         return $this->organizationRepository->getByCondition($condition);
+    }
+
+    /**
+     * @param Organization $organization
+     * @return bool|mixed
+     */
+    public function store(Organization $organization)
+    {
+        return $this->organizationRepository->store($organization);
     }
 }

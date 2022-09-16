@@ -23,4 +23,21 @@ class UserRepository {
     {
         return User::where($condition)->first();
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function store(User $user)
+    {
+        return $user->save();
+    }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function isExist(string $email) {
+        return User::where('email',$email)->exists();
+    }
 }

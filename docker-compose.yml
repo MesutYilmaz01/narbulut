@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   app:
-    build: 
+    build:
       context: ./
       dockerfile: ./dockerfile/php/Dockerfile
     ports:
@@ -13,7 +13,7 @@ services:
       net:
         ipv4_address: 192.10.2.4
   web:
-    build: 
+    build:
       context: ./
       dockerfile: ./dockerfile/nginx/Dockerfile
     ports:
@@ -30,7 +30,7 @@ services:
     image: mysql:latest
     ports:
       - 3306:3306
-    environment: 
+    environment:
         MYSQL_DATABASE: testdb
         MYSQL_ROOT_PASSWORD: mypassword
         MYSQL_USER: user
@@ -42,8 +42,8 @@ services:
     image: redis:latest
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
-    volumes: 
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
       - ./redis:/var/www/redis
     networks:
       net:

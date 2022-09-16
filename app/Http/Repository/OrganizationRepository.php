@@ -23,4 +23,13 @@ class OrganizationRepository {
     {
         return Organization::where($condition)->first();
     }
+
+    /**
+     * @param Organization $organization
+     * @return bool
+     */
+    public function store(Organization $organization)
+    {
+        return $organization->save();
+    }
 }
