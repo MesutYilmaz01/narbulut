@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Contracts\IOrganizationService;
 use App\Http\Resources\OrganizationResource;
+use Illuminate\Support\Facades\Cache;
 
 class OrganizationController extends Controller
 {
@@ -25,7 +26,10 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        return OrganizationResource::collection($this->organizationService->getAll());
+        $organizationService = $this->organizationService;
+        return Cache::remember('organizations', 60*60*24, function () {
+            return OrganizationResource::collection($this->organizationService->getAll());
+        });
     }
 
     /**

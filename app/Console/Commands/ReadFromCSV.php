@@ -42,7 +42,6 @@ class ReadFromCSV extends Command
                 continue;
             }
             $array [] = $temp;
-
             SaveToDatabaseFromCSV::dispatch($temp);
         }
         fclose($file_handle);

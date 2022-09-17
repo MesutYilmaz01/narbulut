@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewUserWelcomeEvent;
 use App\Http\Contracts\IUserService;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Cache;
 
 class UserController extends Controller
 {
@@ -26,7 +28,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection($this->userService->getAll());
+        $userService = $this->userService;
+        return Cache::remember('users', 60*60*24, function () {
+            return UserResource::collection($this->userService->getAll());
+        });
     }
 
     public function getByUuid(string $uuid)

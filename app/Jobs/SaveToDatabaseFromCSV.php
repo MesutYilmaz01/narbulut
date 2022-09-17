@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\NewUserWelcomeEvent;
 use App\Http\Contracts\IOrganizationService;
 use App\Http\Contracts\IUserService;
 use App\Models\Organization;
@@ -56,11 +57,12 @@ class SaveToDatabaseFromCSV implements ShouldQueue
             $user = new User();
             $user->name = explode("@",$this->data[1])[0];
             $user->email = $this->data[1];
-            $user->password = Hash::make(
-                substr(str_shuffle(
-                    str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                        mt_rand(1,10))), 1, 10));
+            $pass = substr(str_shuffle(
+                str_repeat('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                    mt_rand(1,10))), 1, 10);
+            $user->password = Hash::make($pass);
             $this->userService->store($user);
+            NewUserWelcomeEvent::dispatch($user, $pass);
         }
 
         //Save organization
